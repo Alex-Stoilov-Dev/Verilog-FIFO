@@ -16,8 +16,6 @@ module test_bench ();
     reg [DATA_WIDTH-1:0] fifo_rdata;
 
     reg [ADDR_WIDTH:0] write_counter;
-    reg [ADDR_WIDTH:0] read_counter;
-
     reg expected_full;
     reg expected_empty;
 
@@ -60,16 +58,16 @@ module test_bench ();
     // Block to send random data to the fifo
     always@(posedge clk) begin
        
-       // repeat(20)@(posedge clk) begin
-       //     WriteEnable <= 1'b1;
-       // end
+        // repeat(20)@(posedge clk) begin
+        //     WriteEnable <= 1'b1;
+        // end
 
-       // repeat(20)@(posedge clk) begin
-       //     WriteEnable <= 1'b0;
-       //     ReadEnable <= 1'b1;
-       // end
+        // repeat(20)@(posedge clk) begin
+        //     WriteEnable <= 1'b0;
+        //     ReadEnable <= 1'b1;
+        // end
 
-       // ReadEnable <= 1'b0;
+        // ReadEnable <= 1'b0;
 
         integer i;
 
@@ -91,44 +89,36 @@ module test_bench ();
 
     // Combinational logic to determine expected empty
     // and expected full
+    always@(*) begin
+        if (write_counter == 2 ** ADDR_WIDTH)
+            expected_full <= 1;
+        else 
+            expected_full <= 0;
+    end
+
+    always@(*) begin
+        if (write_counter == 0)
+            expected_empty <= 1;
+        else
+            expected_empty <= 0;
+    end
 
     // Sequential logic to keep track of the write count.
     always@(posedge clk) begin
         if (rst) begin
             write_counter <= 0;
         end
+        else if (WriteEnable && ReadEnable) begin
+            write_counter <= write_counter;
+        end
         else if (WriteEnable && !expected_full) begin
             write_counter <= write_counter + 1;
         end
+        else if (ReadEnable && !expected_empty) begin
+            write_counter <= write_counter - 1;
+        end
         else begin
             write_counter <= write_counter;
-        end
-    end
-
-    always@(posedge clk) begin
-        if (rst) begin
-            read_counter <= 0;
-        end
-        else if (ReadEnable && !expected_empty) begin
-            read_counter <= read_counter + 1;
-        end
-        else begin
-            read_counter <= read_counter;
-        end
-    end
-
-    always@(*) begin
-        if (write_counter[ADDR_WIDTH] == read_counter[ADDR_WIDTH] && write_counter[ADDR_WIDTH-1:0] == read_counter[ADDR_WIDTH-1:0]) begin
-            expected_empty <= 1'b1;
-        end
-        else begin
-            expected_empty <= 1'b0;
-        end
-        if (write_counter[ADDR_WIDTH] != read_counter[ADDR_WIDTH] && (write_counter[ADDR_WIDTH-1:0] == read_counter[ADDR_WIDTH-1:0])) begin
-            expected_full <= 1'b1;
-        end
-        else begin
-            expected_full <= 1'b0;
         end
     end
 
