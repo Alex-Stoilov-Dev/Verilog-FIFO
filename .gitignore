@@ -1,0 +1,16 @@
+cov.vdb/*
+*.log
+verdiLog/*
+*.txt
+*.vf
+*.fsdb
+*.key
+*.h
+*.conf
+simv
+tb_files.f
+simv.daidir/*
+csrc/*
+*.rc
+Makefile
+
