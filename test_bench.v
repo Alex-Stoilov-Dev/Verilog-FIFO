@@ -74,7 +74,6 @@ module test_bench ();
         for (i = 0; i < 20; i = i + 1) begin
             WriteEnable <= $random;
             ReadEnable <= $random;
-            fifo_wdata <= $random;
         end
     end
 
