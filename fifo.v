@@ -20,7 +20,23 @@ module fifo #(
     assign we1_const_zero = 1'b0;
     wire unused1;
 
-    dual_mem_model #(
+    // dual_mem_model #(
+    //     .DATA_WIDTH(DATA_WIDTH),
+    //     .ADDR_WIDTH(ADDR_WIDTH)
+    // )  
+    // mem_model (
+    //     .clk(clk),
+    //     .we0(we),
+    //     .addr0(WrPtr[ADDR_WIDTH-1:0]),
+    //     .wdata0(wrdata),
+    //     .rdata0(unused1),
+    //     .we1(we1_const_zero),
+    //     .addr1(RdPtr[ADDR_WIDTH-1:0]),
+    //     .wdata1(wdata1_tie_off),
+    //     .rdata1(rddata)
+    // );
+    
+    dual_port_register_memory#(
         .DATA_WIDTH(DATA_WIDTH),
         .ADDR_WIDTH(ADDR_WIDTH)
     )  

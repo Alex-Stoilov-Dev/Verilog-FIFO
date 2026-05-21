@@ -107,7 +107,7 @@ module test_bench ();
         if (rst) begin
             write_counter <= 0;
         end
-        else if (WriteEnable && ReadEnable) begin
+        else if (WriteEnable && ReadEnable && !expected_empty && !expected_full) begin
             write_counter <= write_counter;
         end
         else if (WriteEnable && !expected_full) begin
